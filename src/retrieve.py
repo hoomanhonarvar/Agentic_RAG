@@ -43,7 +43,7 @@ def embed(raw_text:str)->list[float]:
     text=remove_noise(text)
     return embed_model.encode(text).tolist()
 
-def retrieve(
+def retrieve_documents(
         query,
         heading_1=None,
         heading_2=None,
