@@ -44,13 +44,12 @@ agent = AssistantAgent(
         model_client=model_client,
         model_client_stream=True,
         tools=[RAG_tool],
-        system_message="Use RAG_tool to solve the tasks about travelling around the world",
-        output_content_type=AgentRagResponse
-    )
-async def main() -> None:
+        system_message="You are a helpfull assistant. Use RAG_tool to solve the tasks about places in the world to travel.",
+        output_content_type=AgentRagResponse,
+        )
+async def Agentic_RAG(task:str) -> str:
 
-    stream = agent.run_stream(task="what beautiful place do you offer in Québec?",cancellation_token=cancellation_token)
-    await Console(stream)
-
-
-asyncio.run(main())
+    result = await agent.run(task=task)
+    return result.messages[-1].content.retrieve_document,result.messages[-1].content.thoughts
+result=asyncio.run(Agentic_RAG("offer me a good place to travel"))
+# print(result)
