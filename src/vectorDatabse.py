@@ -5,10 +5,13 @@ import tiktoken
 from qdrant_client import QdrantClient
 from qdrant_client.models import PointStruct, Distance, VectorParams
 from sentence_transformers import SentenceTransformer
+from dotenv import load_dotenv
 import os
-print("Current working directory:", os.getcwd())
 
-
+load_dotenv()
+collection_name=os.getenv("collection_name")
+qdrant_url=os.getenv("Qdrant_Host")
+qdrant_port=os.getenv("Qdrant_Port")
 def extract_data(doc_path):
     doc = Document(doc_path)
     current_headings = []  
@@ -95,9 +98,9 @@ def tokenize_chunk(text, metadata, tokenizer_name="gpt2", chunk_size=100, overla
 
 def upload_chunks_to_qdrant(
     dataset,  
-    collection_name="The_best_place_to_travel",
-    qdrant_url="http://localhost",
-    qdrant_port=8080,
+    collection_name=collection_name,
+    qdrant_url=qdrant_url,
+    qdrant_port=qdrant_port,
     embed_model=None
 ):
     model=embed_model
@@ -126,7 +129,7 @@ def upload_chunks_to_qdrant(
 
 
 
-file_path=".\\dataset\\dataset.docx"
+file_path="../dataset/dataset.docx"
 
 
 sections = extract_data(file_path)
@@ -144,6 +147,6 @@ dataset_new=[item for sublist in dataset for item in sublist]
 
 # model =SentenceTransformer( 'sentence-transformers/all-MiniLM-L6-v2')
 # model.save('./models/all-MiniLM-L6-v2')
-model =SentenceTransformer( './models/all-MiniLM-L6-v2')
+model =SentenceTransformer( '../models/all-MiniLM-L6-v2')
 
 upload_chunks_to_qdrant(dataset_new,embed_model=model)

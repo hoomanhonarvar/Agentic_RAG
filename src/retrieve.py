@@ -7,7 +7,7 @@ import re
 import unicodedata
 
 
-embed_model = SentenceTransformer("./models/all-MiniLM-L6-v2")
+embed_model = SentenceTransformer("../models/all-MiniLM-L6-v2")
 load_dotenv()
 
 Qdrant_Host=os.getenv("Qdrant_Host")
@@ -47,7 +47,7 @@ def retrieve_documents(
         query,
         heading_1=None,
         heading_2=None,
-        similarity_threshold: float=0.5):
+        similarity_threshold: float=0.1):
     query_vector=embed(query)
 
     must_conditions = []
@@ -65,7 +65,7 @@ def retrieve_documents(
         collection_name=collectionName,
         query_vector=query_vector,
         query_filter=query_filter,
-        limit=3,
+        limit=1,
         score_threshold =similarity_threshold
         
         
@@ -77,3 +77,5 @@ def retrieve_documents(
             "score": hit.score  
         })
     return results
+
+# print(retrieve_documents("From a legendary Alpine range "))
