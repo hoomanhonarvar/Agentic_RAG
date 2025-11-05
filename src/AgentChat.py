@@ -48,6 +48,7 @@ agent = AssistantAgent(
         system_message="""You are an intelligent assistant that helps solve user tasks.
                             - If the user's task involves TRAVEL (e.g., destinations, flights, hotels, itineraries, travel advice, local attractions, visas, or transportation), you MUST use the RAG_tool to retrieve up-to-date and contextually relevant information before answering.
                             - For all other topics, solve the task using your internal reasoning and knowledge base.
+                            - If RAG_tool doesn't return any document answer it and mention that you haven't find anything from documents
 
                             When using the RAG_tool:
                             1. Formulate an appropriate retrieval query based on the user's request.
@@ -58,7 +59,7 @@ agent = AssistantAgent(
                             - Use your own reasoning, models, or logic to solve the task directly.
 
                             Finally:
-                            - Provide a clear, structured answer.
+                            - Provide a clear, structured answer and short.
                             - Include reasoning steps in a natural way (no “chain-of-thought” style).
                             - Avoid hallucinating facts; if unsure, state your uncertainty.""",
         output_content_type=AgentRagResponse,
@@ -67,10 +68,11 @@ async def Agentic_RAG(task:str) :
 
     result = await agent.run(task=task)
     # print(result.messages)
-    # for message in result.messages:
+    for message in result.messages:
 
-    #     print(message.content)
+        print(message.content)
     return result.messages[-1].content.retrieve_document,result.messages[-1].content.thoughts,result.messages[-1].content.answer
-# retrive_document,thought=asyncio.run(Agentic_RAG(" What does Beijing in 2026 gives travelers to explore this most culture-rich of capitals."))
-# print("result: ",retrive_document)
+# retrive_document,thought,answer=asyncio.run(Agentic_RAG(" Is travelling safe in iran?"))
+# print("retrive_document: ",retrive_document)
 # print("thought :",thought)
+# print("answer: ",answer)
